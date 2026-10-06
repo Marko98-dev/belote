@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#0E1514"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="#134E4A"/><rect x="38" y="30" width="44" height="60" rx="6" fill="#FFFFFF"/><path transform="translate(48 46)" d="M12 21.5C6.5 17.5 3 14 3 9.6 3 6.5 5.4 4 8.3 4c1.6 0 3 .8 3.7 2.1C12.7 4.8 14.1 4 15.7 4 18.6 4 21 6.5 21 9.6c0 4.4-3.5 7.9-9 11.9z" fill="#D33A3A"/></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A100F;color:#F4F1EA;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#F5B544;text-decoration:none}a:hover{color:#FFD07A}
+@keyframes ringPulse{0%{transform:scale(1);opacity:.95}100%{transform:scale(1.5);opacity:0}}
+@keyframes screenIn{0%{opacity:0}100%{opacity:1}}
+@keyframes cardIn{0%{opacity:0;transform:scale(.9)}100%{opacity:1;transform:scale(1)}}
+</style>
+</helmet>
+<div style="min-height:100vh;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#F4F1EA">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14px;font-weight:700">Belot · prototip</span><span style="font-size:12px;color:#9AA6A2;font-variant-numeric:tabular-nums">{{label}} {{W}}×{{H}} · {{screenName}}</span></div>
+<div style="padding:{{bezel}}px;background:#000;border-radius:{{outerR}}px;box-shadow:0 24px 64px rgba(0,0,0,.5),0 0 0 1px rgba(244,241,234,.1)">
+<div style="position:relative;width:{{W}}px;height:{{H}}px;border-radius:{{screenR}}px;overflow:hidden;background:radial-gradient(ellipse 75% 85% at 50% 42%,#175A55 0%,#134E4A 55%,#0F3E3A 100%)">
+
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 120% at 30% 50%,#152321 0%,#0E1514 70%);animation:screenIn .3s ease-out">
+<div style="position:absolute;left:0;top:0;bottom:0;width:60%;filter:blur(1px)">
+<div style="position:absolute;left:4%;right:2%;top:9%;bottom:12%;border-radius:50%;background:radial-gradient(ellipse at 50% 45%,#175A55 0%,#134E4A 55%,#10433F 100%);box-shadow:0 0 0 1px rgba(244,241,234,.04),0 24px 60px rgba(0,0,0,.55),inset 0 0 48px rgba(0,0,0,.28)"></div>
+<div style="position:absolute;left:50%;top:12px;transform:translateX(-50%);display:flex;align-items:center;gap:12px">
+<div style="width:56px;height:56px;border-radius:50%;border:3px solid #FF6B5B;padding:2px;box-sizing:border-box;background:#0E1514"><img src="{{av.top}}" alt="AnaB" style="display:block;width:100%;height:100%;border-radius:50%"></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:700">AnaB</span>
+<div style="position:relative;width:78px;height:50px"><sc-for list="{{backs7}}" as="b"><div style="position:absolute;top:0;left:{{b.x}}px;width:36px;height:50px;border-radius:6px;background:#0E1514;padding:3px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,.3)"><div style="width:100%;height:100%;border-radius:4px;box-sizing:border-box;border:1px solid rgba(245,181,68,.55);background-color:#18221F;background-image:radial-gradient(#F5B544 1px,transparent 1.4px);background-size:6px 6px;background-position:2px 2px"></div></div></sc-for></div></div>
+</div>
+<div style="position:absolute;left:72px;top:47%;transform:translateY(-50%);display:flex;align-items:center;gap:12px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:56px;height:56px;border-radius:50%;border:3px solid #4DA3FF;padding:2px;box-sizing:border-box;background:#0E1514"><img src="{{av.left}}" alt="Ivke" style="display:block;width:100%;height:100%;border-radius:50%"></div><span style="font-size:12px;font-weight:700">Ivke</span></div>
+<div style="position:relative;width:78px;height:50px"><sc-for list="{{backs8}}" as="b"><div style="position:absolute;top:0;left:{{b.x}}px;width:36px;height:50px;border-radius:6px;background:#0E1514;padding:3px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,.3)"><div style="width:100%;height:100%;border-radius:4px;box-sizing:border-box;border:1px solid rgba(245,181,68,.55);background-color:#18221F;background-image:radial-gradient(#F5B544 1px,transparent 1.4px);background-size:6px 6px;background-position:2px 2px"></div></div></sc-for></div>
+</div>
+<div style="position:absolute;right:12px;top:47%;transform:translateY(-50%);display:flex;flex-direction:row-reverse;align-items:center;gap:12px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div style="position:relative;width:56px;height:56px"><div style="position:absolute;inset:0;border-radius:50%;border:3px solid #4DA3FF;animation:ringPulse 1.6s ease-out infinite"></div><div style="position:relative;width:100%;height:100%;border-radius:50%;border:3px solid #4DA3FF;padding:2px;box-sizing:border-box;background:#0E1514"><img src="{{av.right}}" alt="Luka7" style="display:block;width:100%;height:100%;border-radius:50%"></div></div><span style="font-size:12px;font-weight:700">Luka7</span></div>
+<div style="position:relative;width:78px;height:50px"><sc-for list="{{backs7}}" as="b"><div style="position:absolute;top:0;left:{{b.x}}px;width:36px;height:50px;border-radius:6px;background:#0E1514;padding:3px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,.3)"><div style="width:100%;height:100%;border-radius:4px;box-sizing:border-box;border:1px solid rgba(245,181,68,.55);background-color:#18221F;background-image:radial-gradient(#F5B544 1px,transparent 1.4px);background-size:6px 6px;background-position:2px 2px"></div></div></sc-for></div>
+</div>
+<div style="position:absolute;left:50%;top:47%;width:0;height:0">
+<sc-for list="{{homeTrick}}" as="c"><div style="position:absolute;left:{{c.x}}px;top:{{c.y}}px;width:52px;height:72px;transform:rotate({{c.rot}}deg)"><div style="transform:scale(.8667,.8571);transform-origin:0 0">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.25),0 6px 16px rgba(0,0,0,.22);color:{{c.color}};overflow:hidden"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{c.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></div><sc-if value="{{c.isNum}}"><svg style="position:absolute;left:20px;top:34px" width="30" height="30" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></sc-if><sc-if value="{{c.isFace}}"><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{c.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{c.suitT}}"><path d="{{c.path}}" fill="currentColor"></path></g></svg></sc-if></div>
+</div></div></sc-for>
+</div>
+<div style="position:absolute;left:72px;bottom:24px;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:12px;font-weight:700">Marko</span><div style="width:56px;height:56px;border-radius:50%;border:3px solid #FF6B5B;padding:2px;box-sizing:border-box;background:#0E1514"><img src="{{av.me}}" alt="Marko" style="display:block;width:100%;height:100%;border-radius:50%"></div></div>
+<div style="position:absolute;left:calc(50% + 24px);bottom:36px;width:256px;height:84px;transform:translateX(-50%)">
+<sc-for list="{{homeFan}}" as="c"><div style="position:absolute;top:0;left:{{c.x}}px;transform:translateY({{c.y}}px) rotate({{c.rot}}deg);transform-origin:50% 100%">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.25),-2px 2px 10px rgba(0,0,0,.2);color:{{c.color}};overflow:hidden"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{c.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></div><sc-if value="{{c.isNum}}"><svg style="position:absolute;left:20px;top:34px" width="30" height="30" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></sc-if><sc-if value="{{c.isFace}}"><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{c.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{c.suitT}}"><path d="{{c.path}}" fill="currentColor"></path></g></svg></sc-if></div>
+</div></sc-for>
+</div>
+</div>
+<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,21,20,.35) 0%,rgba(14,21,20,.35) 52%,rgba(14,21,20,.82) 66%,rgba(14,21,20,.9) 100%);pointer-events:none"></div>
+<div style="position:absolute;left:72px;top:16px;display:flex;align-items:baseline;gap:2px"><span style="font-size:24px;line-height:28px;font-weight:800;letter-spacing:-0.04em">Bellote</span><span style="width:6px;height:6px;border-radius:50%;background:#F5B544"></span></div>
+<div style="position:absolute;right:60px;top:12px;bottom:20px;width:{{menuW}}px;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr))">
+<button style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;padding:0;color:#F4F1EA;font-family:inherit;cursor:pointer"><span style="width:48px;height:48px;border-radius:999px;background:rgba(244,241,234,.08);display:flex;align-items:center;justify-content:center"><span style="width:40px;height:40px;border-radius:50%;border:2px solid #FF6B5B;padding:2px;box-sizing:border-box;display:block"><img src="{{av.me}}" alt="Profil" style="display:block;width:100%;height:100%;border-radius:50%"></span></span><span style="font-size:12px;line-height:14px;font-weight:600;white-space:nowrap">Profil</span></button>
+<button style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;padding:0;color:#F4F1EA;font-family:inherit;cursor:pointer"><span style="width:48px;height:48px;border-radius:999px;background:rgba(244,241,234,.08);display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20v-7h4v7M10 20V5h4v15M15 20v-10h4v10"></path></svg></span><span style="font-size:12px;line-height:14px;font-weight:600;white-space:nowrap">Rang lista</span></button>
+<button style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;padding:0;color:#F4F1EA;font-family:inherit;cursor:pointer"><span style="width:48px;height:48px;border-radius:999px;background:rgba(244,241,234,.08);display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v14H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14M8 7h8M8 11h5"></path></svg></span><span style="font-size:12px;line-height:14px;font-weight:600;white-space:nowrap">Pravila</span></button>
+<button style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;padding:0;color:#F4F1EA;font-family:inherit;cursor:pointer"><span style="width:48px;height:48px;border-radius:999px;background:rgba(244,241,234,.08);display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.650 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span style="font-size:12px;line-height:14px;font-weight:600;white-space:nowrap">Postavke</span></button>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:rgba(27,39,38,.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:inset 0 0 0 1px rgba(244,241,234,.08),0 16px 40px rgba(0,0,0,.36)">
+<button onClick="{{startRound}}" style="height:56px;border-radius:999px;border:none;background:#F5B544;color:#1F1606;font-family:inherit;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:transform .1s,background .1s;box-shadow:0 2px 8px rgba(0,0,0,.16),0 8px 24px rgba(0,0,0,.18)" style-hover="background:#F8C062" style-active="background:#D99A2B;transform:scale(.98);box-shadow:none"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" fill="currentColor"></path></svg>Igraj online</button>
+<button onClick="{{startRound}}" style="height:48px;border-radius:999px;border:1.5px solid rgba(244,241,234,.36);background:transparent;color:#F4F1EA;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s,background .1s" style-hover="border-color:rgba(244,241,234,.52)" style-active="background:rgba(244,241,234,.10);transform:scale(.98)">Igra protiv botova</button>
+<button onClick="{{startRound}}" style="height:48px;border-radius:999px;border:1.5px solid rgba(244,241,234,.36);background:transparent;color:#F4F1EA;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s,background .1s" style-hover="border-color:rgba(244,241,234,.52)" style-active="background:rgba(244,241,234,.10);transform:scale(.98)">Igraj s prijateljima</button>
+<button onClick="{{startRound}}" style="height:48px;border-radius:999px;border:1.5px solid rgba(244,241,234,.36);background:transparent;color:#F4F1EA;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s,background .1s" style-hover="border-color:rgba(244,241,234,.52)" style-active="background:rgba(244,241,234,.10);transform:scale(.98)">Turniri</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isGame}}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;animation:screenIn .3s ease-out">
+<div style="position:absolute;left:72px;top:12px;display:flex;align-items:center;gap:8px">
+<div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 14px;border-radius:999px;background:rgba(14,21,20,.55);font-variant-numeric:tabular-nums">
+<div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B5B"></span><span style="font-size:15px;font-weight:600">Mi</span><span style="font-size:15px;font-weight:800;min-width:3ch">{{scoreA}}</span></div>
+<div style="width:1px;height:16px;background:rgba(244,241,234,.2)"></div>
+<div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#4DA3FF"></span><span style="font-size:15px;font-weight:600">Vi</span><span style="font-size:15px;font-weight:800;min-width:3ch">{{scoreB}}</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px 0 8px;border-radius:999px;background:rgba(14,21,20,.55)">
+<sc-if value="{{hasTrump}}"><div style="width:24px;height:24px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;color:{{trumpColor}}"><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{trumpPath}}" fill="currentColor"></path></svg></div></sc-if>
+<sc-if value="{{noTrump}}"><div style="width:24px;height:24px;border-radius:50%;box-sizing:border-box;border:1.5px dashed rgba(244,241,234,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#9AA6A2">?</div></sc-if>
+<span style="font-size:12px;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums">Runda {{round}}</span>
+</div>
+</div>
+<div style="position:absolute;right:60px;top:8px;display:flex;gap:8px">
+<button aria-label="Emoji i chat" style="width:48px;height:48px;border-radius:999px;border:none;background:rgba(14,21,20,.55);color:#F4F1EA;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,background .1s" style-active="background:rgba(14,21,20,.85);transform:scale(.96)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H10l-5 4V5z"></path><path d="M9 10h.01M15 10h.01M9.5 12.5q2.5 1.8 5 0"></path></svg></button>
+<button aria-label="Meni" onClick="{{goHome}}" style="width:48px;height:48px;border-radius:999px;border:none;background:rgba(14,21,20,.55);color:#F4F1EA;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,background .1s" style-active="background:rgba(14,21,20,.85);transform:scale(.96)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+
+<sc-for list="{{seats}}" as="s"><div style="position:absolute;left:{{s.left}};right:{{s.right}};top:{{s.top}};transform:{{s.tf}};display:flex;flex-direction:{{s.dir}};align-items:center;gap:8px">
+<div style="display:flex;flex-direction:{{s.avDir}};align-items:center;gap:{{s.avGap}}px">
+<div style="position:relative;width:52px;height:52px;display:flex;align-items:center;justify-content:center">
+<sc-if value="{{s.turn}}"><div style="position:absolute;left:6px;top:6px;width:40px;height:40px;box-sizing:border-box;border-radius:50%;border:3px solid {{s.ring}};animation:ringPulse 1.4s ease-out infinite"></div></sc-if>
+<sc-if value="{{s.timer}}"><svg width="52" height="52" viewBox="0 0 52 52" style="position:absolute;inset:0;transform:rotate(-90deg)"><circle cx="26" cy="26" r="24.5" fill="none" stroke="rgba(244,241,234,.14)" stroke-width="2.5"></circle><circle cx="26" cy="26" r="24.5" fill="none" stroke="{{timerColor}}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="153.9" stroke-dashoffset="{{timerOffset}}"></circle></svg></sc-if>
+<div style="position:relative;width:40px;height:40px;border-radius:50%;border:3px solid {{s.ring}};padding:2px;box-sizing:border-box;background:#0E1514"><img src="{{s.src}}" alt="{{s.name}}" style="display:block;width:100%;height:100%;border-radius:50%"></div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:{{s.labelAlign}};gap:4px">
+<span style="font-size:12px;line-height:14px;font-weight:700;white-space:nowrap">{{s.name}}</span>
+<sc-if value="{{s.passed}}"><span style="height:20px;padding:0 8px;border-radius:999px;background:rgba(14,21,20,.6);font-size:12px;line-height:20px;font-weight:600;color:#C9D1CE;white-space:nowrap">Dalje</span></sc-if>
+<sc-if value="{{s.called}}"><span style="height:20px;padding:0 8px;border-radius:999px;background:#F5B544;font-size:12px;line-height:20px;font-weight:700;color:#1F1606;white-space:nowrap">{{calledLabel}}</span></sc-if>
+</div>
+</div>
+<sc-if value="{{s.showBack}}"><div style="position:relative;width:36px;height:50px">
+<div style="width:36px;height:50px;border-radius:6px;background:#0E1514;padding:3px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,.3)"><div style="width:100%;height:100%;border-radius:4px;box-sizing:border-box;border:1px solid rgba(245,181,68,.55);background-color:#18221F;background-image:radial-gradient(#F5B544 1px,transparent 1.4px);background-size:6px 6px;background-position:2px 2px"></div></div>
+<span style="position:absolute;right:-8px;bottom:-6px;min-width:22px;height:22px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:#F4F1EA;color:#0E1514;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;box-shadow:0 2px 6px rgba(0,0,0,.3)">{{s.count}}</span>
+</div></sc-if>
+</div></sc-for>
+
+<sc-if value="{{isBid}}">
+<div style="position:absolute;left:50%;top:{{cyBid}}px;width:60px;height:84px;margin-left:-30px;margin-top:-42px;animation:cardIn .3s ease-out">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:{{offerShadow}};color:{{offer.color}};overflow:hidden;transition:box-shadow .3s"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{offer.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{offer.path}}" fill="currentColor"></path></svg></div><sc-if value="{{offer.isNum}}"><svg style="position:absolute;left:20px;top:34px" width="30" height="30" viewBox="0 0 24 24"><path d="{{offer.path}}" fill="currentColor"></path></svg></sc-if><sc-if value="{{offer.isFace}}"><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{offer.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{offer.suitT}}"><path d="{{offer.path}}" fill="currentColor"></path></g></svg></sc-if></div>
+</div>
+</sc-if>
+
+<sc-if value="{{isPlay}}">
+<div style="position:absolute;left:50%;top:{{cyPlay}}px;width:0;height:0">
+<sc-for list="{{slots}}" as="t"><div style="position:absolute;left:{{t.x}}px;top:{{t.y}}px;width:52px;height:72px">
+<sc-if value="{{t.empty}}"><div style="width:52px;height:72px;box-sizing:border-box;border-radius:8px;border:1.5px dashed rgba(244,241,234,.22)"></div></sc-if>
+<sc-if value="{{t.filled}}"><div style="animation:cardIn .2s ease-out"><div style="transform:scale(.8667,.8571) translateY({{t.lift}}px);transform-origin:0 0;transition:transform .2s">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:{{t.shadow}};color:{{t.c.color}};overflow:hidden;transition:box-shadow .2s"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{t.c.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{t.c.path}}" fill="currentColor"></path></svg></div><sc-if value="{{t.c.isNum}}"><svg style="position:absolute;left:20px;top:34px" width="30" height="30" viewBox="0 0 24 24"><path d="{{t.c.path}}" fill="currentColor"></path></svg></sc-if><sc-if value="{{t.c.isFace}}"><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{t.c.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{t.c.suitT}}"><path d="{{t.c.path}}" fill="currentColor"></path></g></svg></sc-if></div>
+</div></div></sc-if>
+</div></sc-for>
+</div>
+</sc-if>
+
+<div style="position:absolute;left:50%;bottom:32px;height:84px;width:{{handW}}px;transform:translateX(-50%);transition:width .25s">
+<sc-for list="{{hand}}" as="c"><div onClick="{{c.onClick}}" style="position:absolute;top:0;left:{{c.x}}px;transform:translateY({{c.ty}}px) rotate({{c.rot}}deg);transform-origin:50% 100%;transition:transform .18s ease,left .25s ease;cursor:{{c.cursor}}">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:{{c.shadow}};color:{{c.color}};overflow:hidden"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{c.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></div><sc-if value="{{c.isNum}}"><svg style="position:absolute;left:20px;top:34px" width="30" height="30" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></sc-if><sc-if value="{{c.isFace}}"><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{c.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{c.suitT}}"><path d="{{c.path}}" fill="currentColor"></path></g></svg></sc-if>
+<sc-if value="{{c.dim}}"><div style="position:absolute;inset:0;background:rgba(14,21,20,.55)"></div></sc-if>
+<sc-if value="{{c.sel}}"><div style="position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 2px #F5B544"></div></sc-if></div>
+</div></sc-for>
+</div>
+
+<sc-if value="{{showBidPanel}}">
+<div style="position:absolute;left:calc(50% + 48px);bottom:128px;width:212px;box-sizing:border-box;padding:12px;border-radius:16px;background:rgba(14,21,20,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px rgba(244,241,234,.08),0 16px 40px rgba(0,0,0,.36);display:flex;flex-direction:column;gap:8px;animation:screenIn .25s ease-out">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:15px;line-height:20px;font-weight:700">Tvoj red</span><span style="font-size:12px;font-weight:700;color:{{timerColor}};font-variant-numeric:tabular-nums">{{secs}} s</span></div>
+<div style="display:flex;gap:8px">
+<button onClick="{{onCall}}" style="flex:1 1 auto;height:48px;padding:0 12px;border-radius:999px;border:none;background:#F5B544;color:#1F1606;font-family:inherit;font-size:15px;font-weight:700;white-space:nowrap;cursor:pointer;transition:transform .1s,background .1s;box-shadow:0 2px 8px rgba(0,0,0,.16)" style-hover="background:#F8C062" style-active="background:#D99A2B;transform:scale(.98);box-shadow:none">Zovi adut</button>
+<button onClick="{{onPass}}" style="flex:0 0 auto;height:48px;padding:0 16px;border-radius:999px;border:1.5px solid rgba(244,241,234,.36);background:transparent;color:#F4F1EA;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s,background .1s" style-active="background:rgba(244,241,234,.10);transform:scale(.98)">Dalje</button>
+</div>
+<div style="height:4px;border-radius:999px;background:rgba(244,241,234,.14);overflow:hidden"><div style="height:100%;width:{{timerPct}}%;border-radius:999px;background:{{timerColor}}"></div></div>
+</div>
+</sc-if>
+
+<sc-if value="{{isEnd}}">
+<div style="position:absolute;inset:0;background:rgba(14,21,20,.6);display:flex;align-items:center;justify-content:center;animation:screenIn .3s ease-out">
+<div style="width:300px;box-sizing:border-box;padding:24px;border-radius:16px;background:#131D1C;box-shadow:inset 0 0 0 1px rgba(244,241,234,.08),0 16px 40px rgba(0,0,0,.36);display:flex;flex-direction:column;gap:16px;align-items:stretch">
+<div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9AA6A2">Kraj runde {{round}}</span><span style="font-size:24px;line-height:28px;font-weight:700">{{endTitle}}</span></div>
+<div style="display:flex;justify-content:center;align-items:center;gap:16px;font-variant-numeric:tabular-nums">
+<div style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B5B"></span><span style="font-size:15px;font-weight:600">Mi</span><span style="font-size:24px;font-weight:800">{{scoreA}}</span></div>
+<span style="color:#9AA6A2">:</span>
+<div style="display:flex;align-items:center;gap:8px"><span style="font-size:24px;font-weight:800">{{scoreB}}</span><span style="font-size:15px;font-weight:600">Vi</span><span style="width:8px;height:8px;border-radius:50%;background:#4DA3FF"></span></div>
+</div>
+<div style="display:flex;gap:8px">
+<button onClick="{{goHome}}" style="flex:0 0 auto;height:48px;padding:0 20px;border-radius:999px;border:1.5px solid rgba(244,241,234,.36);background:transparent;color:#F4F1EA;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer" style-active="background:rgba(244,241,234,.10);transform:scale(.98)">Početna</button>
+<button onClick="{{nextRound}}" style="flex:1 1 auto;height:48px;padding:0 20px;border-radius:999px;border:none;background:#F5B544;color:#1F1606;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#F8C062" style-active="background:#D99A2B;transform:scale(.98)">Nova runda</button>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ios}}"><div style="position:absolute;left:11px;top:50%;width:37px;height:126px;margin-top:-63px;border-radius:999px;background:#000"></div><div style="position:absolute;left:50%;bottom:8px;width:140px;height:5px;margin-left:-70px;border-radius:999px;background:rgba(244,241,234,.7);pointer-events:none"></div></sc-if>
+<sc-if value="{{android}}"><div style="position:absolute;left:14px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#000;box-shadow:0 0 0 2px #050707"></div><div style="position:absolute;left:50%;bottom:7px;width:108px;height:4px;margin-left:-54px;border-radius:999px;background:rgba(244,241,234,.6);pointer-events:none"></div></sc-if>
+<sc-if value="{{safeArea}}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;top:0;bottom:0;width:60px;background:rgba(245,181,68,.10);border-right:1px dashed rgba(245,181,68,.7);pointer-events:none"></div>
+<div style="position:absolute;right:0;top:0;bottom:0;width:60px;background:rgba(245,181,68,.10);border-left:1px dashed rgba(245,181,68,.7);pointer-events:none"></div>
+<div style="position:absolute;left:60px;right:60px;bottom:0;height:20px;background:rgba(245,181,68,.10);border-top:1px dashed rgba(245,181,68,.7);pointer-events:none"></div>
+</sc-if>
+</div>
+</div>
+<span style="font-size:12px;color:#9AA6A2">{{hint}}</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;iPhone 852×393&quot;,&quot;Android 800×360&quot;],&quot;default&quot;:&quot;iPhone 852×393&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;label&quot;:&quot;Uređaj&quot;},&quot;safeArea&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;label&quot;:&quot;Prikaži safe area&quot;}}">
+const SUITS = {
+  S: 'M12 2C9 6 4 9.5 4 13.6 4 16.3 6 18 8.4 18c1.3 0 2.5-.5 3.1-1.3L10.2 22h3.6l-1.3-5.3c.6.8 1.8 1.3 3.1 1.3 2.4 0 4.4-1.7 4.4-4.4C20 9.5 15 6 12 2z',
+  H: 'M12 21.5C6.5 17.5 3 14 3 9.6 3 6.5 5.4 4 8.3 4c1.6 0 3 .8 3.7 2.1C12.7 4.8 14.1 4 15.7 4 18.6 4 21 6.5 21 9.6c0 4.4-3.5 7.9-9 11.9z',
+  D: 'M12 2l7.5 10L12 22 4.5 12z',
+  C: 'M12 2.5a4.3 4.3 0 0 1 3.9 6.1A4.3 4.3 0 1 1 13.3 16l1 6h-4.6l1-6a4.3 4.3 0 1 1-2.6-7.4A4.3 4.3 0 0 1 12 2.5z',
+};
+const SUIT_NAME = { S: 'pik', H: 'herc', D: 'karo', C: 'tref' };
+const FACE = {
+  J: { d: 'M14 2h6a8 8 0 0 1 8 8v24a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8V10a8 8 0 0 1 8-8z', t: 'translate(11 16) scale(.5)' },
+  Q: { d: 'M17 6a15 15 0 1 1 0 30a15 15 0 1 1 0-30z', t: 'translate(11 15) scale(.5)' },
+  K: { d: 'M2 40V14l8 8 7-14 7 14 8-8v26z', t: 'translate(11 24) scale(.5)' },
+};
+const COL = { S: '#1C2422', H: '#D33A3A', D: '#D33A3A', C: '#1C2422' };
+const RANKS = ['7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const ORD_N = ['7', '8', '9', 'J', 'Q', 'K', '10', 'A'];
+const ORD_T = ['7', '8', 'Q', 'K', '10', 'A', '9', 'J'];
+const PTS_N = { A: 11, '10': 10, K: 4, Q: 3, J: 2, '9': 0, '8': 0, '7': 0 };
+const PTS_T = { J: 20, '9': 14, A: 11, '10': 10, K: 4, Q: 3, '8': 0, '7': 0 };
+const SUIT_SORT = ['S', 'H', 'C', 'D'];
+const sp = id => id.split('-');
+function card(id) {
+  const [s, r] = sp(id); const f = FACE[r];
+  return { id, suit: s, rank: r, path: SUITS[s], color: COL[s], isNum: !f, isFace: !!f, facePath: f ? f.d : '', suitT: f ? f.t : '' };
+}
+const AV = {
+  me: { bg: '#2C4A47', skin: '#F0CDA9', hair: '#2B1E16', shirt: '#E9E4D8', type: 'short' },
+  top: { bg: '#3B3550', skin: '#E3B088', hair: '#7A3E22', shirt: '#F5B544', type: 'long' },
+  left: { bg: '#4A3F33', skin: '#C68A5E', hair: '#231A14', shirt: '#4DA3FF', type: 'cap', cap: '#2F8F83' },
+  right: { bg: '#2E3E52', skin: '#8D5A3B', hair: '#17110D', shirt: '#E9E4D8', type: 'afro' },
+};
+function avatarSrc(a) {
+  const f = (d, c) => `<path d="${d}" fill="${c}"/>`;
+  let back = '', front = '', extra = '';
+  const cap = 'M20 27c-1-10 5-16 12-16s13 6 12 16c-2-5-6-8-12-8s-10 3-12 8z';
+  if (a.type === 'short') front = f(cap, a.hair);
+  if (a.type === 'long') { back = f('M17 48c-2-7-2-13-2-20 0-10 7-17 17-17s17 7 17 17c0 7 0 13-2 20z', a.hair); front = f('M20 27c0-9 5-14 12-14s12 5 12 14c-5-2-9-6-11-9-2 4-7 8-13 9z', a.hair); }
+  if (a.type === 'cap') front = f('M19 25c0-8 6-14 13-14s13 6 13 14z', a.cap) + `<rect x="30" y="22" width="21" height="4" rx="2" fill="${a.cap}"/>`;
+  if (a.type === 'afro') { back = `<circle cx="32" cy="23" r="17" fill="${a.hair}"/>`; extra = `<g fill="none" stroke="#0E1514" stroke-width="1.8"><circle cx="27" cy="29" r="4.4"/><circle cx="37" cy="29" r="4.4"/><path d="M31.4 29h1.2"/></g>`; }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${a.bg}"/>${back}<path d="M8 66c2-13 12-19 24-19s22 6 24 19z" fill="${a.shirt}"/><rect x="28" y="38" width="8" height="10" rx="3" fill="${a.skin}"/><circle cx="20" cy="29" r="2.6" fill="${a.skin}"/><circle cx="44" cy="29" r="2.6" fill="${a.skin}"/><ellipse cx="32" cy="28" rx="12" ry="14" fill="${a.skin}"/>${front}<circle cx="27" cy="29" r="1.7" fill="#0E1514"/><circle cx="37" cy="29" r="1.7" fill="#0E1514"/><path d="M28.5 35.5q3.5 2.6 7 0" stroke="#0E1514" stroke-width="1.6" fill="none" stroke-linecap="round"/>${extra}</svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+const SRC = Object.fromEntries(Object.entries(AV).map(([k, v]) => [k, avatarSrc(v)]));
+const HOME_HAND = ['H-A', 'H-10', 'H-K', 'S-J', 'S-9', 'D-Q', 'D-8', 'C-A'];
+const BID_MS = 10000, PLAY_MS = 15000;
+const NEXT = { left: 'top', top: 'right', right: 'me' };
+const TEAM_A = { me: 1, top: 1 };
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const sortHand = h => h.slice().sort((a, b) => { const [sa, ra] = sp(a), [sb, rb] = sp(b); return SUIT_SORT.indexOf(sa) - SUIT_SORT.indexOf(sb) || ORD_N.indexOf(rb) - ORD_N.indexOf(ra); });
+const rand = a => a[Math.floor(Math.random() * a.length)];
+
+class Component extends DCLogic {
+  state = { screen: 'home', hands: { me: [], top: [], left: [], right: [] }, offer: 'H-K', trump: null, bidPhase: 'mine',
+    trick: {}, turn: null, selected: null, lastSeat: null, winSeat: null, scoreA: 0, scoreB: 0, round: 1, t0: Date.now(), now: Date.now() };
+  timers = [];
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  clearAll() { this.timers.forEach(clearTimeout); this.timers = []; }
+  componentDidMount() { this.iv = setInterval(() => this.tick(), 100); }
+  componentWillUnmount() { clearInterval(this.iv); this.clearAll(); }
+
+  tick() {
+    const s = this.state, now = Date.now();
+    this.setState({ now });
+    if (s.screen === 'bid' && s.bidPhase === 'mine' && now - s.t0 > BID_MS) this.pass();
+    if (s.screen === 'play' && s.turn === 'me' && now - s.t0 > PLAY_MS) this.playMe(rand(this.playable()));
+  }
+  startRound(round) {
+    this.clearAll();
+    const d = shuffle(SUIT_SORT.flatMap(s => RANKS.map(r => s + '-' + r)));
+    const hands = { me: sortHand(d.slice(0, 8)), top: d.slice(8, 16), left: d.slice(16, 24), right: d.slice(24, 32) };
+    this.setState({ screen: 'bid', hands, offer: rand(hands.right), trump: null, bidPhase: 'mine', trick: {}, turn: null, selected: null,
+      lastSeat: null, winSeat: null, scoreA: 0, scoreB: 0, round: round || 1, t0: Date.now() });
+  }
+  call() {
+    if (this.state.bidPhase !== 'mine') return;
+    this.setState({ bidPhase: 'called', trump: sp(this.state.offer)[0] });
+    this.later(() => this.startPlay(), 1300);
+  }
+  pass() {
+    if (this.state.bidPhase !== 'mine') return;
+    this.setState({ bidPhase: 'passed' });
+    this.later(() => this.setState({ bidPhase: 'luka', trump: sp(this.state.offer)[0] }), 1400);
+    this.later(() => this.startPlay(), 2700);
+  }
+  startPlay() { this.setState({ screen: 'play' }); this.startTrick(); }
+  startTrick() {
+    this.setState({ trick: {}, turn: 'left', selected: null, lastSeat: null, winSeat: null });
+    this.later(() => this.bot('left'), 800);
+  }
+  legal(hand, led) {
+    if (!led) return hand;
+    const f = hand.filter(c => sp(c)[0] === led); if (f.length) return f;
+    const t = hand.filter(c => sp(c)[0] === this.state.trump); return t.length ? t : hand;
+  }
+  bot(seat) {
+    const { hands, trick } = this.state;
+    const led = trick.left ? sp(trick.left)[0] : null;
+    const c = rand(this.legal(hands[seat], led));
+    const nextSeat = NEXT[seat];
+    this.setState({ hands: { ...hands, [seat]: hands[seat].filter(x => x !== c) }, trick: { ...trick, [seat]: c }, lastSeat: seat, turn: nextSeat, t0: Date.now() });
+    if (nextSeat !== 'me') this.later(() => this.bot(nextSeat), 650);
+  }
+  playable() {
+    const { hands, trick } = this.state;
+    return this.legal(hands.me, trick.left ? sp(trick.left)[0] : null);
+  }
+  onCard(id) {
+    const s = this.state;
+    if (s.screen !== 'play' || s.turn !== 'me' || !this.playable().includes(id)) return;
+    if (s.selected === id) this.playMe(id); else this.setState({ selected: id });
+  }
+  playMe(id) {
+    if (!id) return;
+    const { hands, trick } = this.state;
+    this.setState({ hands: { ...hands, me: hands.me.filter(x => x !== id) }, trick: { ...trick, me: id }, lastSeat: 'me', turn: null, selected: null });
+    this.later(() => this.resolve(), 800);
+  }
+  resolve() {
+    const { trick, trump, hands } = this.state;
+    const led = sp(trick.left)[0];
+    let best = 'left';
+    ['top', 'right', 'me'].forEach(seat => {
+      const [s, r] = sp(trick[seat]), [bs, br] = sp(trick[best]);
+      if (s === trump && bs !== trump) best = seat;
+      else if (s === bs) { const o = s === trump ? ORD_T : ORD_N; if (o.indexOf(r) > o.indexOf(br)) best = seat; }
+    });
+    let pts = Object.values(trick).reduce((n, id) => { const [s, r] = sp(id); return n + (s === trump ? PTS_T[r] : PTS_N[r]); }, 0);
+    const last = hands.me.length === 0;
+    if (last) pts += 10;
+    this.setState(st => TEAM_A[best] ? { winSeat: best, scoreA: st.scoreA + pts } : { winSeat: best, scoreB: st.scoreB + pts });
+    this.later(() => last ? this.setState({ screen: 'end', trick: {}, winSeat: null }) : this.startTrick(), 1100);
+  }
+  goHome() { this.clearAll(); this.setState({ screen: 'home', turn: null }); }
+
+  renderVals() {
+    const s = this.state;
+    const android = (this.props.device ?? 'iPhone 852×393').startsWith('Android');
+    const W = android ? 800 : 852, H = android ? 360 : 393;
+    const isHome = s.screen === 'home', isBid = s.screen === 'bid', isPlay = s.screen === 'play' || s.screen === 'end', isEnd = s.screen === 'end';
+    const limit = isBid ? BID_MS : PLAY_MS;
+    const left = Math.max(0, 1 - (s.now - s.t0) / limit);
+    const mid = (s.hands.me.length - 1) / 2;
+    const playable = isPlay && s.turn === 'me' ? this.playable() : [];
+    const hand = s.hands.me.map((id, i) => {
+      const c = card(id), sel = s.selected === id, ok = playable.includes(id);
+      const dim = s.screen === 'play' && s.turn === 'me' && !ok;
+      return { ...c, x: i * 36, rot: ((i - mid) * 2).toFixed(1), ty: Math.round((i - mid) ** 2 * 0.55) + (sel ? -16 : 0), sel, dim,
+        cursor: ok ? 'pointer' : 'default', shadow: sel ? '0 16px 32px rgba(0,0,0,.36)' : '0 1px 2px rgba(0,0,0,.25),-2px 2px 10px rgba(0,0,0,.2)', onClick: () => this.onCard(id) };
+    });
+    const SH = '0 1px 2px rgba(0,0,0,.25),0 4px 10px rgba(0,0,0,.18)';
+    const slot = (key, x, y) => {
+      const id = s.trick[key], win = s.winSeat === key, just = !s.winSeat && s.lastSeat === key;
+      return { x, y, empty: !id, filled: !!id, c: card(id || 'H-7'), lift: just ? -4 : 0,
+        shadow: win ? '0 0 0 3px #F5B544,0 10px 24px rgba(0,0,0,.3)' : just ? '0 2px 4px rgba(0,0,0,.2),0 14px 28px rgba(0,0,0,.34)' : SH };
+    };
+    const seat = o => ({ left: 'auto', right: 'auto', top: 'auto', tf: 'none', dir: 'row', avDir: 'column', avGap: 2, labelAlign: 'center', showBack: false, passed: false, called: false, turn: false, timer: false, count: 0, ...o });
+    const bp = s.bidPhase;
+    const seats = isBid ? [
+      seat({ name: 'AnaB', src: SRC.top, ring: '#FF6B5B', passed: true, left: 'calc(50% - 26px)', top: '12px', avDir: 'row', avGap: 8, labelAlign: 'flex-start' }),
+      seat({ name: 'Ivke', src: SRC.left, ring: '#4DA3FF', passed: true, left: '72px', top: '50%', tf: 'translateY(-50%)' }),
+      seat({ name: 'Luka7', src: SRC.right, ring: '#4DA3FF', turn: bp === 'passed', called: bp === 'luka', right: '72px', top: '50%', tf: 'translateY(-50%)' }),
+      seat({ name: 'Marko', src: SRC.me, ring: '#FF6B5B', turn: bp === 'mine', passed: bp === 'passed' || bp === 'luka', called: bp === 'called', left: '72px', top: 'calc(100% - 32px - 72px)', avDir: 'row', avGap: 8, labelAlign: 'flex-start' }),
+    ] : [
+      seat({ name: 'AnaB', src: SRC.top, ring: '#FF6B5B', count: s.hands.top.length, showBack: true, turn: s.turn === 'top', left: 'calc(50% - 26px)', top: '12px', avDir: 'row', avGap: 6, labelAlign: 'flex-start' }),
+      seat({ name: 'Ivke', src: SRC.left, ring: '#4DA3FF', count: s.hands.left.length, showBack: true, turn: s.turn === 'left', left: '72px', top: '50%', tf: 'translateY(-50%)' }),
+      seat({ name: 'Luka7', src: SRC.right, ring: '#4DA3FF', count: s.hands.right.length, showBack: true, turn: s.turn === 'right', right: '72px', top: '50%', tf: 'translateY(-50%)', dir: 'row-reverse' }),
+      seat({ name: 'Marko', src: SRC.me, ring: '#FF6B5B', turn: s.turn === 'me', timer: s.turn === 'me', left: '72px', top: 'calc(100% - 32px - 68px)' }),
+    ];
+    const trumpSuit = s.trump;
+    const won = s.scoreA > s.scoreB;
+    const names = { home: 'Početna', bid: 'Biranje aduta', play: 'Partija', end: 'Kraj runde' };
+    const hints = { home: 'Dodirni „Igraj online“ ili bilo koji način igre.', bid: '„Zovi adut“ ili „Dalje“ — nakon 10 s automatski „Dalje“.', play: s.turn === 'me' ? 'Tvoj potez: dodirni kartu, pa je dodirni ponovo da je odigraš.' : 'Protivnici i partner igraju…', end: 'Nova runda ili povratak na početnu.' };
+    return {
+      W, H, ios: !android, android, label: android ? 'Android' : 'iPhone',
+      bezel: android ? 8 : 12, outerR: android ? 36 : 60, screenR: android ? 28 : 48,
+      menuW: Math.round(W * 0.4 - 76),
+      cyPlay: Math.round((68 + (H - 32 - 84 - 16)) / 2), cyBid: Math.round((68 + (H - 32 - 84)) / 2),
+      safeArea: this.props.safeArea ?? false,
+      screenName: names[s.screen], hint: hints[s.screen],
+      isHome, isGame: !isHome, isBid, isPlay, isEnd,
+      av: SRC,
+      backs7: [0, 1, 2, 3, 4, 5, 6].map(i => ({ x: i * 7 })), backs8: [0, 1, 2, 3, 4, 5, 6, 7].map(i => ({ x: i * 6 })),
+      homeTrick: [{ ...card('H-Q'), x: -50, y: -40, rot: -9 }, { ...card('H-7'), x: -2, y: -34, rot: 7 }],
+      homeFan: HOME_HAND.map((id, i) => ({ ...card(id), x: i * 28, rot: (i - 3.5) * 3, y: Math.round((i - 3.5) ** 2 * 0.8) })),
+      startRound: () => this.startRound(1), nextRound: () => this.startRound(s.round + 1), goHome: () => this.goHome(),
+      scoreA: s.scoreA, scoreB: s.scoreB, round: s.round,
+      hasTrump: !!trumpSuit, noTrump: !trumpSuit, trumpPath: SUITS[trumpSuit || 'H'], trumpColor: COL[trumpSuit || 'H'],
+      calledLabel: 'Zvao ' + SUIT_NAME[sp(s.offer)[0]],
+      seats, offer: card(s.offer),
+      offerShadow: bp === 'called' || bp === 'luka'
+        ? '0 0 0 3px #F5B544,0 0 32px rgba(245,181,68,.45),0 10px 24px rgba(0,0,0,.3)'
+        : '0 0 0 2px rgba(245,181,68,.75),0 0 24px rgba(245,181,68,.25),0 10px 24px rgba(0,0,0,.3)',
+      slots: [slot('top', -26, -74), slot('left', -88, -36), slot('right', 36, -36), slot('me', -26, 2)],
+      hand, handW: Math.max(0, s.hands.me.length - 1) * 36 + 60,
+      showBidPanel: isBid && bp === 'mine',
+      onCall: () => this.call(), onPass: () => this.pass(),
+      secs: Math.ceil(left * limit / 1000), timerPct: (left * 100).toFixed(1),
+      timerOffset: (153.9 * (1 - left)).toFixed(1), timerColor: left < 0.3 ? '#FF8A3D' : '#F5B544',
+      endTitle: s.scoreA === s.scoreB ? 'Neriješeno' : won ? 'Mi smo pobijedili' : 'Vi ste pobijedili',
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A100F;color:#F4F1EA;font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#F5B544;text-decoration:none}a:hover{color:#FFD07A}
+@keyframes ringPulse{0%{transform:scale(1);opacity:.95}100%{transform:scale(1.5);opacity:0}}
+</style>
+</helmet>
+<div style="padding:56px;display:flex;flex-direction:column;gap:32px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#F4F1EA">
+<header style="display:flex;justify-content:space-between;align-items:flex-end;gap:48px;max-width:1800px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F5B544">Ekran · Biranje aduta</span>
+<h1 style="margin:0;font-size:40px;font-weight:800;letter-spacing:-0.03em;line-height:1">Biranje aduta</h1>
+<p style="margin:0;font-size:15px;line-height:22px;color:#9AA6A2;max-width:640px;text-wrap:pretty">Interaktivno: „Zovi adut“ potvrđuje herc, „Dalje“ predaje red igraču desno. Scena se nakon par sekundi vraća na početak.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:20px;color:#9AA6A2;max-width:460px">
+<span><span style="color:#F4F1EA;font-weight:600">Panel (Android 360):</span> x 448–660, y 120–232 — desno od ponuđene karte (370–430), 12 px iznad ruke (244), lijevo od desnog igrača (676).</span>
+<span>Ruka je ista kao u partiji, nijedna karta nije zatamnjena.</span>
+</div>
+</header>
+
+<div style="display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+<sc-for list="{{frames}}" as="f" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14px;font-weight:700">{{f.label}}</span><span style="font-size:12px;color:#9AA6A2;font-variant-numeric:tabular-nums">{{f.W}}×{{f.H}}</span></div>
+<div style="padding:{{f.bezel}}px;background:#000;border-radius:{{f.outerR}}px;box-shadow:0 24px 64px rgba(0,0,0,.5),0 0 0 1px rgba(244,241,234,.1)">
+<div style="position:relative;width:{{f.W}}px;height:{{f.H}}px;border-radius:{{f.screenR}}px;overflow:hidden;background:radial-gradient(ellipse 75% 85% at 50% 42%,#175A55 0%,#134E4A 55%,#0F3E3A 100%)">
+
+<div style="position:absolute;left:72px;top:12px;display:flex;align-items:center;gap:8px">
+<div style="display:flex;align-items:center;gap:12px;height:40px;padding:0 16px;border-radius:999px;background:rgba(14,21,20,.55);font-variant-numeric:tabular-nums">
+<div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#FF6B5B"></span><span style="font-size:15px;font-weight:600">Mi</span><span style="font-size:15px;font-weight:800">0</span></div>
+<div style="width:1px;height:16px;background:rgba(244,241,234,.2)"></div>
+<div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#4DA3FF"></span><span style="font-size:15px;font-weight:600">Vi</span><span style="font-size:15px;font-weight:800">0</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px 0 8px;border-radius:999px;background:rgba(14,21,20,.55)">
+<sc-if value="{{hasTrump}}" hint-placeholder-val="{{ false }}"><div style="width:24px;height:24px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;color:#D33A3A"><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{trumpPath}}" fill="currentColor"></path></svg></div></sc-if>
+<sc-if value="{{noTrump}}" hint-placeholder-val="{{ true }}"><div style="width:24px;height:24px;border-radius:50%;box-sizing:border-box;border:1.5px dashed rgba(244,241,234,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#9AA6A2">?</div></sc-if>
+<span style="font-size:12px;font-weight:700;letter-spacing:.04em;font-variant-numeric:tabular-nums">Runda 1</span>
+</div>
+</div>
+
+<div style="position:absolute;right:60px;top:8px;display:flex;gap:8px">
+<button aria-label="Emoji i chat" style="width:48px;height:48px;border-radius:999px;border:none;background:rgba(14,21,20,.55);color:#F4F1EA;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,background .1s" style-active="background:rgba(14,21,20,.85);transform:scale(.96)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H10l-5 4V5z"></path><path d="M9 10h.01M15 10h.01M9.5 12.5q2.5 1.8 5 0"></path></svg></button>
+<button aria-label="Meni" style="width:48px;height:48px;border-radius:999px;border:none;background:rgba(14,21,20,.55);color:#F4F1EA;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,background .1s" style-active="background:rgba(14,21,20,.85);transform:scale(.96)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+</div>
+
+<sc-for list="{{seats}}" as="s"><div style="position:absolute;left:{{s.left}};right:{{s.right}};top:{{s.top}};transform:{{s.tf}};display:flex;flex-direction:{{s.avDir}};align-items:center;gap:{{s.avGap}}px">
+<div style="position:relative;width:52px;height:52px;display:flex;align-items:center;justify-content:center">
+<sc-if value="{{s.turn}}"><div style="position:absolute;left:6px;top:6px;width:40px;height:40px;box-sizing:border-box;border-radius:50%;border:3px solid {{s.ring}};animation:ringPulse 1.4s ease-out infinite"></div></sc-if>
+<div style="position:relative;width:40px;height:40px;border-radius:50%;border:3px solid {{s.ring}};padding:2px;box-sizing:border-box;background:#0E1514"><img src="{{s.src}}" alt="{{s.name}}" style="display:block;width:100%;height:100%;border-radius:50%"></div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:{{s.labelAlign}};gap:4px">
+<span style="font-size:12px;line-height:14px;font-weight:700;white-space:nowrap">{{s.name}}</span>
+<sc-if value="{{s.passed}}"><span style="height:20px;padding:0 8px;border-radius:999px;background:rgba(14,21,20,.6);font-size:12px;line-height:20px;font-weight:600;color:#C9D1CE;white-space:nowrap">Dalje</span></sc-if>
+<sc-if value="{{s.called}}"><span style="height:20px;padding:0 8px;border-radius:999px;background:#F5B544;font-size:12px;line-height:20px;font-weight:700;color:#1F1606;white-space:nowrap">Zvao herc</span></sc-if>
+</div>
+</div></sc-for>
+
+<div style="position:absolute;left:50%;top:{{f.cy}}px;width:60px;height:84px;margin-left:-30px;margin-top:-42px">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:{{offerShadow}};color:#D33A3A;overflow:hidden;transition:box-shadow .3s"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{offer.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{offer.path}}" fill="currentColor"></path></svg></div><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{offer.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{offer.suitT}}"><path d="{{offer.path}}" fill="currentColor"></path></g></svg></div>
+</div>
+
+<div style="position:absolute;left:50%;bottom:32px;height:84px;width:{{handW}}px;transform:translateX(-50%)">
+<sc-for list="{{hand}}" as="c"><div style="position:absolute;top:0;left:{{c.x}}px;transform:translateY({{c.ty}}px) rotate({{c.rot}}deg);transform-origin:50% 100%">
+<div style="position:relative;width:60px;height:84px;background:#FFFFFF;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,.25),-2px 2px 10px rgba(0,0,0,.2);color:{{c.color}};overflow:hidden"><div style="position:absolute;left:3px;top:5px;width:22px;display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.06em">{{c.rank}}</span><svg width="14" height="14" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></div><sc-if value="{{c.isNum}}"><svg style="position:absolute;left:20px;top:34px" width="30" height="30" viewBox="0 0 24 24"><path d="{{c.path}}" fill="currentColor"></path></svg></sc-if><sc-if value="{{c.isFace}}"><svg style="position:absolute;left:20px;top:30px" width="34" height="44" viewBox="0 0 34 44"><path d="{{c.facePath}}" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><g transform="{{c.suitT}}"><path d="{{c.path}}" fill="currentColor"></path></g></svg></sc-if></div>
+</div></sc-for>
+</div>
+
+<sc-if value="{{showPanel}}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:calc(50% + 48px);bottom:128px;width:212px;box-sizing:border-box;padding:12px;border-radius:16px;background:rgba(14,21,20,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:inset 0 0 0 1px rgba(244,241,234,.08),0 16px 40px rgba(0,0,0,.36);display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:15px;line-height:20px;font-weight:700">Tvoj red</span><span style="font-size:12px;font-weight:700;color:{{timerColor}};font-variant-numeric:tabular-nums">{{secs}} s</span></div>
+<div style="display:flex;gap:8px">
+<button onClick="{{onCall}}" style="flex:1 1 auto;height:48px;padding:0 12px;border-radius:999px;border:none;background:#F5B544;color:#1F1606;font-family:inherit;font-size:15px;font-weight:700;white-space:nowrap;cursor:pointer;transition:transform .1s,background .1s;box-shadow:0 2px 8px rgba(0,0,0,.16)" style-hover="background:#F8C062" style-active="background:#D99A2B;transform:scale(.98);box-shadow:none">Zovi adut</button>
+<button onClick="{{onPass}}" style="flex:0 0 auto;height:48px;padding:0 16px;border-radius:999px;border:1.5px solid rgba(244,241,234,.36);background:transparent;color:#F4F1EA;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s,background .1s" style-active="background:rgba(244,241,234,.10);transform:scale(.98)">Dalje</button>
+</div>
+<div style="height:4px;border-radius:999px;background:rgba(244,241,234,.14);overflow:hidden"><div style="height:100%;width:{{timerPct}}%;border-radius:999px;background:{{timerColor}}"></div></div>
+</div>
+</sc-if>
+
+<sc-if value="{{f.ios}}"><div style="position:absolute;left:11px;top:50%;width:37px;height:126px;margin-top:-63px;border-radius:999px;background:#000"></div><div style="position:absolute;left:50%;bottom:8px;width:140px;height:5px;margin-left:-70px;border-radius:999px;background:rgba(244,241,234,.7)"></div></sc-if>
+<sc-if value="{{f.android}}"><div style="position:absolute;left:14px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#000;box-shadow:0 0 0 2px #050707"></div><div style="position:absolute;left:50%;bottom:7px;width:108px;height:4px;margin-left:-54px;border-radius:999px;background:rgba(244,241,234,.6)"></div></sc-if>
+
+<sc-if value="{{safeArea}}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;top:0;bottom:0;width:60px;background:rgba(245,181,68,.10);border-right:1px dashed rgba(245,181,68,.7);pointer-events:none"></div>
+<div style="position:absolute;right:0;top:0;bottom:0;width:60px;background:rgba(245,181,68,.10);border-left:1px dashed rgba(245,181,68,.7);pointer-events:none"></div>
+<div style="position:absolute;left:60px;right:60px;bottom:0;height:20px;background:rgba(245,181,68,.10);border-top:1px dashed rgba(245,181,68,.7);pointer-events:none"></div>
+</sc-if>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;safeArea&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;label&quot;:&quot;Prikaži safe area&quot;}}">
+const SUITS = {
+  S: 'M12 2C9 6 4 9.5 4 13.6 4 16.3 6 18 8.4 18c1.3 0 2.5-.5 3.1-1.3L10.2 22h3.6l-1.3-5.3c.6.8 1.8 1.3 3.1 1.3 2.4 0 4.4-1.7 4.4-4.4C20 9.5 15 6 12 2z',
+  H: 'M12 21.5C6.5 17.5 3 14 3 9.6 3 6.5 5.4 4 8.3 4c1.6 0 3 .8 3.7 2.1C12.7 4.8 14.1 4 15.7 4 18.6 4 21 6.5 21 9.6c0 4.4-3.5 7.9-9 11.9z',
+  D: 'M12 2l7.5 10L12 22 4.5 12z',
+  C: 'M12 2.5a4.3 4.3 0 0 1 3.9 6.1A4.3 4.3 0 1 1 13.3 16l1 6h-4.6l1-6a4.3 4.3 0 1 1-2.6-7.4A4.3 4.3 0 0 1 12 2.5z',
+};
+const FACE = {
+  J: { d: 'M14 2h6a8 8 0 0 1 8 8v24a8 8 0 0 1-8 8h-6a8 8 0 0 1-8-8V10a8 8 0 0 1 8-8z', t: 'translate(11 16) scale(.5)' },
+  Q: { d: 'M17 6a15 15 0 1 1 0 30a15 15 0 1 1 0-30z', t: 'translate(11 15) scale(.5)' },
+  K: { d: 'M2 40V14l8 8 7-14 7 14 8-8v26z', t: 'translate(11 24) scale(.5)' },
+};
+const COL = { S: '#1C2422', H: '#D33A3A', D: '#D33A3A', C: '#1C2422' };
+function card(id) {
+  const [s, r] = id.split('-'); const f = FACE[r];
+  return { id, suit: s, rank: r, path: SUITS[s], color: COL[s], isNum: !f, isFace: !!f, facePath: f ? f.d : '', suitT: f ? f.t : '' };
+}
+const AV = {
+  me: { bg: '#2C4A47', skin: '#F0CDA9', hair: '#2B1E16', shirt: '#E9E4D8', type: 'short' },
+  top: { bg: '#3B3550', skin: '#E3B088', hair: '#7A3E22', shirt: '#F5B544', type: 'long' },
+  left: { bg: '#4A3F33', skin: '#C68A5E', hair: '#231A14', shirt: '#4DA3FF', type: 'cap', cap: '#2F8F83' },
+  right: { bg: '#2E3E52', skin: '#8D5A3B', hair: '#17110D', shirt: '#E9E4D8', type: 'afro' },
+};
+function avatarSrc(a) {
+  const f = (d, c) => `<path d="${d}" fill="${c}"/>`;
+  let back = '', front = '', extra = '';
+  const cap = 'M20 27c-1-10 5-16 12-16s13 6 12 16c-2-5-6-8-12-8s-10 3-12 8z';
+  if (a.type === 'short') front = f(cap, a.hair);
+  if (a.type === 'long') { back = f('M17 48c-2-7-2-13-2-20 0-10 7-17 17-17s17 7 17 17c0 7 0 13-2 20z', a.hair); front = f('M20 27c0-9 5-14 12-14s12 5 12 14c-5-2-9-6-11-9-2 4-7 8-13 9z', a.hair); }
+  if (a.type === 'cap') front = f('M19 25c0-8 6-14 13-14s13 6 13 14z', a.cap) + `<rect x="30" y="22" width="21" height="4" rx="2" fill="${a.cap}"/>`;
+  if (a.type === 'afro') { back = `<circle cx="32" cy="23" r="17" fill="${a.hair}"/>`; extra = `<g fill="none" stroke="#0E1514" stroke-width="1.8"><circle cx="27" cy="29" r="4.4"/><circle cx="37" cy="29" r="4.4"/><path d="M31.4 29h1.2"/></g>`; }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${a.bg}"/>${back}<path d="M8 66c2-13 12-19 24-19s22 6 24 19z" fill="${a.shirt}"/><rect x="28" y="38" width="8" height="10" rx="3" fill="${a.skin}"/><circle cx="20" cy="29" r="2.6" fill="${a.skin}"/><circle cx="44" cy="29" r="2.6" fill="${a.skin}"/><ellipse cx="32" cy="28" rx="12" ry="14" fill="${a.skin}"/>${front}<circle cx="27" cy="29" r="1.7" fill="#0E1514"/><circle cx="37" cy="29" r="1.7" fill="#0E1514"/><path d="M28.5 35.5q3.5 2.6 7 0" stroke="#0E1514" stroke-width="1.6" fill="none" stroke-linecap="round"/>${extra}</svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+const SRC = Object.fromEntries(Object.entries(AV).map(([k, v]) => [k, avatarSrc(v)]));
+const HAND = ['H-A', 'H-10', 'H-Q', 'S-J', 'S-9', 'D-K', 'D-8', 'C-A'];
+const TURN_MS = 10000;
+
+class Component extends DCLogic {
+  state = { phase: 'mine', t0: Date.now(), now: Date.now() };
+
+  componentDidMount() { this.iv = setInterval(() => this.setState({ now: Date.now() }), 100); }
+  componentWillUnmount() { clearInterval(this.iv); clearTimeout(this.to); }
+  go(phase) {
+    clearTimeout(this.to);
+    this.setState({ phase });
+    this.to = setTimeout(() => this.setState({ phase: 'mine', t0: Date.now() }), 2800);
+  }
+
+  renderVals() {
+    const { phase, t0, now } = this.state;
+    const mine = phase === 'mine', called = phase === 'called', passed = phase === 'passed';
+    const left = Math.max(0, 1 - ((now - t0) % TURN_MS) / TURN_MS);
+    const mid = 3.5;
+    const seat = (o) => ({ left: 'auto', right: 'auto', top: 'auto', tf: 'none', avDir: 'column', avGap: 2, labelAlign: 'center', passed: false, called: false, turn: false, ...o });
+    const frames = [
+      { label: 'Android', W: 800, H: 360, bezel: 8, outerR: 36, screenR: 28, ios: false, android: true },
+    ].map(f => ({ ...f, cy: Math.round((68 + (f.H - 32 - 84)) / 2) }));
+    return {
+      frames, safeArea: this.props.safeArea ?? false,
+      hasTrump: called, noTrump: !called, trumpPath: SUITS.H,
+      offer: card('H-K'),
+      offerShadow: called
+        ? '0 0 0 3px #F5B544,0 0 32px rgba(245,181,68,.45),0 10px 24px rgba(0,0,0,.3)'
+        : '0 0 0 2px rgba(245,181,68,.75),0 0 24px rgba(245,181,68,.25),0 10px 24px rgba(0,0,0,.3)',
+      seats: [
+        seat({ name: 'AnaB', src: SRC.top, ring: '#FF6B5B', passed: true, left: '50%', top: '12px', tf: 'translateX(-50%)', avDir: 'row', avGap: 8, labelAlign: 'flex-start' }),
+        seat({ name: 'Ivke', src: SRC.left, ring: '#4DA3FF', passed: true, left: '72px', top: '50%', tf: 'translateY(-50%)' }),
+        seat({ name: 'Luka7', src: SRC.right, ring: '#4DA3FF', turn: passed, right: '72px', top: '50%', tf: 'translateY(-50%)' }),
+        seat({ name: 'Marko', src: SRC.me, ring: '#FF6B5B', turn: mine, passed, called, left: '72px', top: 'calc(100% - 32px - 72px)', avDir: 'row', avGap: 8, labelAlign: 'flex-start' }),
+      ],
+      hand: HAND.map((id, i) => ({ ...card(id), x: i * 36, rot: ((i - mid) * 2).toFixed(1), ty: Math.round((i - mid) ** 2 * 0.55) })),
+      handW: 7 * 36 + 60,
+      showPanel: mine,
+      secs: Math.ceil(left * TURN_MS / 1000),
+      timerPct: (left * 100).toFixed(1), timerColor: left < 0.3 ? '#FF8A3D' : '#F5B544',
+      onCall: () => this.go('called'),
+      onPass: () => this.go('passed'),
+    };
+  }
+}
+</script>
+</body>
+</html>
