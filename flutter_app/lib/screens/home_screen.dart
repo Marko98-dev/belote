@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 
+import '../game/belot_controller.dart';
 import '../game/cards.dart';
 import '../game/rules.dart';
 import '../layout.dart';
@@ -12,6 +13,8 @@ import '../widgets/buttons.dart';
 import '../widgets/card_back.dart';
 import '../widgets/paint.dart';
 import '../widgets/playing_card.dart';
+import '../widgets/sheet.dart';
+import 'home_panels.dart';
 
 const _homeHand = [
   PlayingCardId(Suit.hearts, Rank.ace), PlayingCardId(Suit.hearts, Rank.ten), PlayingCardId(Suit.hearts, Rank.king),
@@ -20,14 +23,26 @@ const _homeHand = [
 ];
 
 /// Home: a dimmed "live table" scene on the left 60 % and the menu column on the right 40 %.
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.layout, required this.onPlay});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.layout, required this.game});
   final BelotLayout layout;
-  final VoidCallback onPlay;
+  final BelotController game;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+enum _Sheet { rules, settings, profile, leaderboard, online, friends, tournaments }
+
+class _HomeScreenState extends State<HomeScreen> {
+  _Sheet? _sheet;
+
+  void _open(_Sheet s) => setState(() => _sheet = s);
+  void _playBots() => widget.game.newMatch();
 
   @override
   Widget build(BuildContext context) {
-    final BelotLayout(:w, :h, :side, :bottom) = layout;
+    final BelotLayout(:w, :h, :side, :bottom) = widget.layout;
     final sceneW = w * .6;
     final menuW = (w * .4 - 76).roundToDouble();
     final midY = h * .47;
@@ -145,28 +160,55 @@ class HomeScreen extends StatelessWidget {
           right: side, top: 12, bottom: bottom, width: menuW,
           child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Row(children: [
-              _TopAction('Profil', const Avatar(who: Seat.me, size: 40, ring: BelotColors.teamA, ringWidth: 2)),
-              _TopAction('Rang lista', BelotIcons.leaderboard()),
-              _TopAction('Pravila', BelotIcons.rules()),
-              _TopAction('Postavke', BelotIcons.settings()),
+              _TopAction('Profil', const Avatar(who: Seat.me, size: 40, ring: BelotColors.teamA, ringWidth: 2), () => _open(_Sheet.profile)),
+              _TopAction('Rang lista', BelotIcons.leaderboard(), () => _open(_Sheet.leaderboard)),
+              _TopAction('Pravila', BelotIcons.rules(), () => _open(_Sheet.rules)),
+              _TopAction('Postavke', BelotIcons.settings(), () => _open(_Sheet.settings)),
             ]),
             GlassPanel(
               tint: const Color(0x8C1B2726),
               blur: 20,
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                PrimaryButton('Igraj online', height: 56, fontSize: 18, icon: BelotIcons.play(), onTap: onPlay),
+                PrimaryButton('Igraj online', height: 56, fontSize: 18, icon: BelotIcons.play(), onTap: () => _open(_Sheet.online)),
                 const SizedBox(height: 8),
-                SecondaryButton('Igra protiv botova', onTap: onPlay),
+                SecondaryButton('Igra protiv botova', onTap: _playBots),
                 const SizedBox(height: 8),
-                SecondaryButton('Igraj s prijateljima', onTap: onPlay),
+                SecondaryButton('Igraj s prijateljima', onTap: () => _open(_Sheet.friends)),
                 const SizedBox(height: 8),
-                SecondaryButton('Turniri', onTap: onPlay),
+                SecondaryButton('Turniri', onTap: () => _open(_Sheet.tournaments)),
               ]),
             ),
           ]),
         ),
+
+        if (_sheet != null) Positioned.fill(child: _buildSheet(_sheet!, h)),
       ]),
     );
+  }
+
+  Widget _buildSheet(_Sheet sheet, double h) {
+    void close() => setState(() => _sheet = null);
+    Widget soon(String title, String body, {bool offerBots = false}) => BelotSheet(
+          title: title,
+          width: 380,
+          onClose: close,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+            Text(body, style: jakarta(15, 400, lineHeight: 22, color: BelotColors.textSoft)),
+            if (offerBots) ...[
+              const SizedBox(height: 16),
+              PrimaryButton('Igraj protiv botova', onTap: _playBots),
+            ],
+          ]),
+        );
+    return switch (sheet) {
+      _Sheet.rules => BelotSheet(title: 'Pravila', width: 520, maxHeight: h - 32, onClose: close, child: const RulesText()),
+      _Sheet.settings => BelotSheet(title: 'Postavke', width: 420, onClose: close, child: SettingsPanel(game: widget.game)),
+      _Sheet.profile => soon('Profil', 'Profil i statistika dolaze s online igrom. Za sada igraš kao Marko.'),
+      _Sheet.leaderboard => soon('Rang lista', 'Rang lista dolazi s online igrom.'),
+      _Sheet.online => soon('Igraj online', 'Online igra još nije dostupna. Do tada možeš igrati protiv botova.', offerBots: true),
+      _Sheet.friends => soon('Igraj s prijateljima', 'Igra s prijateljima dolazi s online igrom. Do tada možeš igrati protiv botova.', offerBots: true),
+      _Sheet.tournaments => soon('Turniri', 'Turniri dolaze s online igrom.', offerBots: true),
+    };
   }
 
   static Widget _named(Widget avatar, String name) => Column(mainAxisSize: MainAxisSize.min, children: [
@@ -184,16 +226,24 @@ class HomeScreen extends StatelessWidget {
 
 /// Icon (48×48 chip) with a small label underneath.
 class _TopAction extends StatelessWidget {
-  const _TopAction(this.label, this.icon);
+  const _TopAction(this.label, this.icon, this.onTap);
   final String label;
   final Widget icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => Expanded(
         child: Semantics(
+          container: true,
           button: true,
           label: label,
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
+          excludeSemantics: true,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
             Container(
               width: 48, height: 48, alignment: Alignment.center,
               decoration: const BoxDecoration(color: Color(0x14F4F1EA), shape: BoxShape.circle),
@@ -201,7 +251,9 @@ class _TopAction extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(label, maxLines: 1, softWrap: false, overflow: TextOverflow.visible, style: jakarta(12, 600, lineHeight: 14)),
-          ]),
+              ]),
+            ),
+          ),
         ),
       );
 }

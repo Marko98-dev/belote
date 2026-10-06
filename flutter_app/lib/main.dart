@@ -53,7 +53,7 @@ class _BelotAppState extends State<BelotApp> {
                     const Positioned.fill(child: TableBackground()),
                     Positioned.fill(
                       child: game.screen == Screen.home
-                          ? HomeScreen(layout: layout, onPlay: () => game.startRound(1))
+                          ? HomeScreen(layout: layout, game: game)
                           : GameScreen(layout: layout, game: game),
                     ),
                   ]),

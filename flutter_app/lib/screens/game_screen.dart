@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/widgets.dart';
 
 import '../game/belot_controller.dart';
+import '../game/cards.dart';
 import '../game/rules.dart';
 import '../layout.dart';
 import '../theme.dart';
@@ -12,28 +13,36 @@ import '../widgets/buttons.dart';
 import '../widgets/card_back.dart';
 import '../widgets/paint.dart';
 import '../widgets/playing_card.dart';
+import '../widgets/sheet.dart';
 
 /// Hand: 36 px of each card visible, gentle arc, selected card lifted 16 px.
 const _handStep = 36.0;
+const _emojis = ['👍', '😂', '😮', '😎', '🙏', '🔥'];
 Color _timerColor(double left) => left < .3 ? BelotColors.warning : BelotColors.accent;
 
-/// Bidding, play and round end share the table layout.
-class GameScreen extends StatelessWidget {
+/// Bidding, play and the end of a hand share the table layout.
+class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.layout, required this.game});
   final BelotLayout layout;
   final BelotController game;
 
   @override
+  State<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  bool _emojiOpen = false, _leaveOpen = false;
+
+  BelotController get g => widget.game;
+
+  @override
   Widget build(BuildContext context) {
-    final g = game;
-    final BelotLayout(:w, :h, :side, :bottom) = layout;
+    final BelotLayout(:w, :h, :side, :bottom) = widget.layout;
     final isBid = g.screen == Screen.bid;
     final isPlay = g.screen == Screen.play || g.screen == Screen.end;
     final handBottom = bottom + 12;
     final cyPlay = ((68 + (h - handBottom - cardH - 16)) / 2).roundToDouble();
     final cyBid = ((68 + (h - handBottom - cardH)) / 2).roundToDouble();
-    final bp = g.bidPhase;
-    final calledLabel = 'Zvao ${g.offer.suit.bosnianName}';
 
     return FadeIn(
       child: Stack(clipBehavior: Clip.none, children: [
@@ -42,9 +51,9 @@ class GameScreen extends StatelessWidget {
         Positioned(
           right: side, top: 8,
           child: Row(children: [
-            IconChipButton(label: 'Emoji i chat', icon: BelotIcons.chat()),
+            IconChipButton(label: 'Emoji i chat', icon: BelotIcons.chat(), onTap: () => setState(() => _emojiOpen = !_emojiOpen)),
             const SizedBox(width: 8),
-            IconChipButton(label: 'Meni', icon: BelotIcons.menu(), onTap: g.goHome),
+            IconChipButton(label: 'Meni', icon: BelotIcons.menu(), onTap: () => setState(() => _leaveOpen = true)),
           ]),
         ),
 
@@ -52,53 +61,49 @@ class GameScreen extends StatelessWidget {
         Positioned(
           left: w / 2 - 26, top: 12,
           child: Row(children: [
-            SeatAvatar(who: Seat.top, ring: BelotColors.teamA, turn: isPlay && g.turn == Seat.top),
+            _avatar(Seat.top),
             SizedBox(width: isBid ? 8 : 6),
-            _Labels(name: 'AnaB', start: true, passed: isBid),
+            _Labels(name: Seat.top.nickname, start: true, badge: _badge(Seat.top)),
             if (isPlay) ...[const SizedBox(width: 8), BackWithCount(count: g.hands[Seat.top]!.length)],
           ]),
         ),
-        _sideSeat(Seat.left, 'Ivke', isPlay: isPlay, turn: isPlay && g.turn == Seat.left, passed: isBid),
-        _sideSeat(Seat.right, 'Luka7', isPlay: isPlay,
-            turn: isBid ? bp == BidPhase.passed : g.turn == Seat.right,
-            called: isBid && bp == BidPhase.luka ? calledLabel : null),
-        if (isBid)
-          Positioned(
-            left: side + 12, top: h - handBottom - 72,
-            child: Row(children: [
-              SeatAvatar(who: Seat.me, ring: BelotColors.teamA, turn: bp == BidPhase.mine),
-              const SizedBox(width: 8),
-              _Labels(
-                name: 'Marko', start: true,
-                passed: bp == BidPhase.passed || bp == BidPhase.luka,
-                called: bp == BidPhase.called ? calledLabel : null,
-              ),
-            ]),
-          )
-        else
-          Positioned(
-            left: side + 12, top: h - handBottom - 68,
-            child: Column(children: [
-              Countdown(
-                start: g.turnStart, total: playDuration, active: g.myTurn,
-                builder: (_, left) => SeatAvatar(
-                  who: Seat.me, ring: BelotColors.teamA, turn: g.myTurn,
-                  timerLeft: g.myTurn ? left : null, timerColor: _timerColor(left),
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text('Marko', style: jakarta(12, 700, lineHeight: 14)),
-            ]),
-          ),
+        _sideSeat(Seat.left, isPlay: isPlay),
+        _sideSeat(Seat.right, isPlay: isPlay),
+        Positioned(
+          left: side + 12, top: h - handBottom - (isBid ? 72 : 68),
+          child: isBid
+              ? Row(children: [
+                  _avatar(Seat.me),
+                  const SizedBox(width: 8),
+                  _Labels(name: Seat.me.nickname, start: true, badge: _badge(Seat.me)),
+                ])
+              : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Column(children: [
+                    Countdown(
+                      start: g.turnStart, total: playDuration, active: g.myTurn,
+                      builder: (_, left) => _avatar(Seat.me, timerLeft: g.myTurn ? left : null, timerColor: _timerColor(left)),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(Seat.me.nickname, style: jakarta(12, 700, lineHeight: 14)),
+                  ]),
+                  if (_badge(Seat.me) case final b?) ...[const SizedBox(width: 8), Padding(padding: const EdgeInsets.only(top: 16), child: b)],
+                ]),
+        ),
 
-        // ── Offered trump card ──
+        // ── Offered trump card (dimmed in round 2, when it can no longer be called) ──
         if (isBid)
           Positioned(
             left: w / 2 - 30, top: cyBid - 42,
             child: FadeIn(
               scale: true,
-              child: PlayingCard(g.offer,
-                  shadow: bp == BidPhase.called || bp == BidPhase.luka ? BelotShadows.offerCalled : BelotShadows.offer),
+              child: AnimatedOpacity(
+                opacity: g.bidRound == 2 && g.caller == null ? .35 : 1,
+                duration: const Duration(milliseconds: 250),
+                child: PlayingCard(
+                  g.offer,
+                  shadow: g.caller != null && g.trump == g.offer.suit ? BelotShadows.offerCalled : BelotShadows.offer,
+                ),
+              ),
             ),
           ),
 
@@ -110,20 +115,100 @@ class GameScreen extends StatelessWidget {
         // ── My hand ──
         Positioned(left: 0, right: 0, bottom: handBottom, height: cardH + 40, child: _Hand(game: g, centerX: w / 2)),
 
-        if (isBid && bp == BidPhase.mine)
-          Positioned(left: w / 2 + 48, bottom: handBottom + 96, width: 212, child: _BidPanel(game: g)),
+        if (g.myBid && g.bidRound == 1)
+          Positioned(left: w / 2 + 48, bottom: handBottom + 96, width: 212, child: _OfferPanel(game: g)),
+        if (g.myBid && g.bidRound == 2)
+          Positioned(left: w / 2 - 134, bottom: handBottom + 96, width: 268, child: _SuitPanel(game: g)),
+
+        if (_emojiOpen)
+          Positioned(
+            right: side, top: 64,
+            child: FadeIn(
+              duration: const Duration(milliseconds: 150),
+              child: GlassPanel(
+                tint: const Color(0xB80E1514),
+                blur: 16,
+                padding: const EdgeInsets.all(8),
+                child: Row(children: [
+                  for (final e in _emojis)
+                    GestureDetector(
+                      onTap: () {
+                        g.react(Seat.me, e);
+                        setState(() => _emojiOpen = false);
+                      },
+                      child: SizedBox.square(dimension: 48, child: Center(child: Text(e, style: const TextStyle(fontSize: 26)))),
+                    ),
+                ]),
+              ),
+            ),
+          ),
 
         if (g.screen == Screen.end) Positioned.fill(child: _EndOverlay(game: g)),
+
+        if (_leaveOpen)
+          Positioned.fill(
+            child: BelotSheet(
+              title: 'Napusti igru?',
+              width: 320,
+              onClose: () => setState(() => _leaveOpen = false),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
+                Text('Rezultat ove igre se neće sačuvati.', style: jakarta(15, 400, lineHeight: 22, color: BelotColors.textSoft)),
+                const SizedBox(height: 16),
+                Row(children: [
+                  SecondaryButton('Ostani', padding: 20, onTap: () => setState(() => _leaveOpen = false)),
+                  const SizedBox(width: 8),
+                  Expanded(child: PrimaryButton('Napusti', onTap: g.goHome)),
+                ]),
+              ]),
+            ),
+          ),
       ]),
     );
   }
 
-  Widget _sideSeat(Seat seat, String name, {required bool isPlay, bool turn = false, bool passed = false, String? called}) {
+  Widget _avatar(Seat seat, {double? timerLeft, Color? timerColor}) {
+    final onTurn = switch (g.screen) {
+      Screen.bid => g.caller == null && g.bidTurn == seat,
+      Screen.play => g.turn == seat,
+      _ => false,
+    };
+    return SeatAvatar(
+      who: seat,
+      ring: seat.team == Team.a ? BelotColors.teamA : BelotColors.teamB,
+      turn: onTurn,
+      timerLeft: timerLeft,
+      timerColor: timerColor,
+      reaction: g.reactions[seat],
+    );
+  }
+
+  /// One status badge per seat: bidding (called / passed / dealer), then bela, declarations and the caller.
+  Widget? _badge(Seat seat) {
+    final trumpName = g.trump?.bosnianName ?? '';
+    if (g.screen == Screen.bid) {
+      if (g.caller == seat) return _Badge.accent('Zvao $trumpName');
+      if (g.passed.contains(seat)) return const _Badge.dark('Dalje');
+      if (g.dealer == seat) return const _Badge.dark('Dijeli');
+      return null;
+    }
+    if (g.screen != Screen.play) return null;
+    // "Bela" shows while the holder's trump king or queen is on the table.
+    final onTable = g.trick[seat];
+    if (g.belaSeat == seat && onTable != null && onTable.suit == g.trump && (onTable.rank == Rank.king || onTable.rank == Rank.queen)) {
+      return const _Badge.accent('Bela');
+    }
+    if (g.tricksPlayed == 0 && g.declaredBy(seat) > 0) return _Badge.accent('Zvanje ${g.declaredBy(seat)}');
+    if (g.caller == seat) return _Badge.dark('Zvao $trumpName');
+    return null;
+  }
+
+  Widget _sideSeat(Seat seat, {required bool isPlay}) {
     final isLeft = seat == Seat.left;
+    final side = widget.layout.side + 12;
     return Positioned(
       top: 0, bottom: 0,
-      left: isLeft ? layout.side + 12 : null,
-      right: isLeft ? null : layout.side + 12,
+      left: isLeft ? side : null,
+      right: isLeft ? null : side,
       child: Align(
         alignment: isLeft ? Alignment.centerLeft : Alignment.centerRight,
         widthFactor: 1,
@@ -131,11 +216,11 @@ class GameScreen extends StatelessWidget {
           textDirection: !isLeft && isPlay ? TextDirection.rtl : TextDirection.ltr,
           children: [
             Column(mainAxisSize: MainAxisSize.min, children: [
-              SeatAvatar(who: seat, ring: BelotColors.teamB, turn: turn),
+              _avatar(seat),
               const SizedBox(height: 2),
-              _Labels(name: name, passed: passed, called: called),
+              _Labels(name: seat.nickname, badge: _badge(seat)),
             ]),
-            if (isPlay) ...[const SizedBox(width: 8), BackWithCount(count: game.hands[seat]!.length)],
+            if (isPlay) ...[const SizedBox(width: 8), BackWithCount(count: g.hands[seat]!.length)],
           ],
         ),
       ),
@@ -184,21 +269,36 @@ class _ScoreBar extends StatelessWidget {
         child: Row(children: children),
       );
 
-  /// Each score has a fixed 3-digit width so the pill never grows into the partner's seat.
+  /// Each score has a fixed 4-digit width (up to 1001+) so the pill never grows into the partner's seat.
   static Widget _score(Color dot, String label, int value) => Row(children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
         const SizedBox(width: 6),
         Text(label, style: jakarta(15, 600)),
         const SizedBox(width: 6),
-        SizedBox(width: 28, child: Text('$value', style: jakarta(15, 800, tabular: true))),
+        SizedBox(width: 38, child: Text('$value', style: jakarta(15, 800, tabular: true))),
       ]);
 }
 
+class _Badge extends StatelessWidget {
+  const _Badge.dark(this.text) : accent = false;
+  const _Badge.accent(this.text) : accent = true;
+  final String text;
+  final bool accent;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        height: 20,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(color: accent ? BelotColors.accent : const Color(0x990E1514), borderRadius: BorderRadius.circular(999)),
+        child: Text(text, style: jakarta(12, accent ? 700 : 600, lineHeight: 20, color: accent ? BelotColors.onAccent : BelotColors.textSoft)),
+      );
+}
+
 class _Labels extends StatelessWidget {
-  const _Labels({required this.name, this.start = false, this.passed = false, this.called});
+  const _Labels({required this.name, this.start = false, this.badge});
   final String name;
-  final bool start, passed;
-  final String? called;
+  final bool start;
+  final Widget? badge;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -206,16 +306,8 @@ class _Labels extends StatelessWidget {
         crossAxisAlignment: start ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           Text(name, maxLines: 1, style: jakarta(12, 700, lineHeight: 14)),
-          if (passed) ...[const SizedBox(height: 4), _badge('Dalje', const Color(0x990E1514), jakarta(12, 600, lineHeight: 20, color: BelotColors.textSoft))],
-          if (called != null) ...[const SizedBox(height: 4), _badge(called!, BelotColors.accent, jakarta(12, 700, lineHeight: 20, color: BelotColors.onAccent))],
+          if (badge != null) ...[const SizedBox(height: 4), badge!],
         ],
-      );
-
-  static Widget _badge(String text, Color bg, TextStyle style) => Container(
-        height: 20,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
-        child: Text(text, style: style),
       );
 }
 
@@ -284,12 +376,17 @@ class _Hand extends StatelessWidget {
   }
 }
 
-class _BidPanel extends StatelessWidget {
-  const _BidPanel({required this.game});
+/// Header + countdown bar shared by both bidding panels.
+class _BidPanelFrame extends StatelessWidget {
+  const _BidPanelFrame({required this.game, required this.title, required this.actions, this.titleSuffix});
   final BelotController game;
+  final String title;
+  final Widget actions;
+  final Widget? titleSuffix;
 
   @override
   Widget build(BuildContext context) => FadeIn(
+        key: ValueKey(game.bidRound),
         duration: const Duration(milliseconds: 250),
         child: GlassPanel(
           tint: const Color(0xB80E1514),
@@ -300,21 +397,14 @@ class _BidPanel extends StatelessWidget {
             builder: (_, left) {
               final c = _timerColor(left);
               return Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text('Tvoj red', style: jakarta(15, 700, lineHeight: 20)),
-                    Text('${(left * bidDuration.inSeconds).ceil()} s', style: jakarta(12, 700, color: c, tabular: true)),
-                  ],
-                ),
-                const SizedBox(height: 8),
                 Row(children: [
-                  Expanded(child: PrimaryButton('Zovi adut', onTap: game.call)),
-                  const SizedBox(width: 8),
-                  SecondaryButton('Dalje', padding: 16, onTap: game.pass),
+                  Text(title, style: jakarta(15, 700, lineHeight: 20)),
+                  if (titleSuffix != null) ...[const SizedBox(width: 8), titleSuffix!],
+                  const Spacer(),
+                  Text('${(left * bidDuration.inSeconds).ceil()} s', style: jakarta(12, 700, color: c, tabular: true)),
                 ]),
+                const SizedBox(height: 8),
+                actions,
                 const SizedBox(height: 8),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(999),
@@ -335,6 +425,96 @@ class _BidPanel extends StatelessWidget {
       );
 }
 
+/// Round 1: call the offered suit or pass.
+class _OfferPanel extends StatelessWidget {
+  const _OfferPanel({required this.game});
+  final BelotController game;
+
+  @override
+  Widget build(BuildContext context) {
+    final suit = game.offer.suit;
+    return _BidPanelFrame(
+      game: game,
+      title: 'Tvoj red',
+      titleSuffix: Container(
+        height: 20,
+        padding: const EdgeInsets.only(left: 3, right: 8),
+        decoration: BoxDecoration(color: BelotColors.cardFace, borderRadius: BorderRadius.circular(999)),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          SvgPathIcon(suit.path, size: 14, color: suit.color),
+          const SizedBox(width: 3),
+          Text(suit.bosnianName, style: jakarta(12, 700, lineHeight: 20, color: BelotColors.suitBlack)),
+        ]),
+      ),
+      actions: Row(children: [
+        Expanded(child: PrimaryButton('Zovi adut', onTap: () => game.callTrump(suit))),
+        const SizedBox(width: 8),
+        SecondaryButton('Dalje', padding: 16, onTap: game.pass),
+      ]),
+    );
+  }
+}
+
+/// Round 2: call any other suit; the dealer must call ("mora").
+class _SuitPanel extends StatelessWidget {
+  const _SuitPanel({required this.game});
+  final BelotController game;
+
+  @override
+  Widget build(BuildContext context) => _BidPanelFrame(
+        game: game,
+        title: game.mustCall ? 'Moraš zvati adut' : 'Biraj adut',
+        actions: Row(children: [
+          for (final s in Suit.values.where((s) => s != game.offer.suit)) ...[
+            _SuitButton(suit: s, onTap: () => game.callTrump(s)),
+            const SizedBox(width: 8),
+          ],
+          const Spacer(),
+          if (!game.mustCall) SecondaryButton('Dalje', padding: 16, onTap: game.pass),
+        ]),
+      );
+}
+
+class _SuitButton extends StatefulWidget {
+  const _SuitButton({required this.suit, required this.onTap});
+  final Suit suit;
+  final VoidCallback onTap;
+
+  @override
+  State<_SuitButton> createState() => _SuitButtonState();
+}
+
+class _SuitButtonState extends State<_SuitButton> {
+  bool _down = false;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+        container: true,
+        button: true,
+        label: 'Zovi ${widget.suit.bosnianName}',
+        excludeSemantics: true,
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _down = true),
+          onTapUp: (_) => setState(() => _down = false),
+          onTapCancel: () => setState(() => _down = false),
+          onTap: widget.onTap,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: AnimatedScale(
+              scale: _down ? .96 : 1,
+              duration: const Duration(milliseconds: 100),
+              child: Container(
+                width: 48, height: 48, alignment: Alignment.center,
+                decoration: BoxDecoration(color: _down ? const Color(0xFFE9E4D8) : BelotColors.cardFace, shape: BoxShape.circle, boxShadow: BelotShadows.button),
+                child: SvgPathIcon(widget.suit.path, size: 24, color: widget.suit.color),
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+/// End of a hand: points breakdown, pass/fall, match totals; at the end of the match the winner.
 class _EndOverlay extends StatelessWidget {
   const _EndOverlay({required this.game});
   final BelotController game;
@@ -342,15 +522,32 @@ class _EndOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final g = game;
-    final title = g.scoreA == g.scoreB ? 'Neriješeno' : (g.scoreA > g.scoreB ? 'Mi smo pobijedili' : 'Vi ste pobijedili');
+    final r = g.lastResult!;
+    final weCalled = r.caller == Team.a;
+    final title = g.matchOver
+        ? (g.matchWinner == Team.a ? 'Pobijedili smo!' : 'Izgubili smo')
+        : switch ((weCalled, r.fell)) {
+            (true, false) => 'Prošli smo',
+            (true, true) => 'Pali smo',
+            (false, false) => 'Prošli su',
+            (false, true) => 'Pali su',
+          };
+    final eyebrow = g.matchOver ? 'Kraj igre · do ${g.target}' : 'Kraj runde ${g.round}';
+    TextStyle cell([int w = 600, Color c = BelotColors.text]) => jakarta(13, w, lineHeight: 20, color: c, tabular: true);
+    TableRow row(String label, int a, int b, {bool strong = false}) => TableRow(children: [
+          Text(label, style: cell(strong ? 700 : 500, strong ? BelotColors.text : BelotColors.textSoft)),
+          Text('$a', textAlign: TextAlign.right, style: cell(strong ? 800 : 600)),
+          Text('$b', textAlign: TextAlign.right, style: cell(strong ? 800 : 600)),
+        ]);
     Widget dot(Color c) => Container(width: 8, height: 8, decoration: BoxDecoration(color: c, shape: BoxShape.circle));
+
     return FadeIn(
       child: Container(
         color: const Color(0x990E1514),
         alignment: Alignment.center,
         child: Container(
-          width: 300,
-          padding: const EdgeInsets.all(24),
+          width: 320,
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: BelotColors.surface,
             borderRadius: BorderRadius.circular(16),
@@ -358,26 +555,35 @@ class _EndOverlay extends StatelessWidget {
             boxShadow: BelotShadows.panel,
           ),
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Text('KRAJ RUNDE ${g.round}', textAlign: TextAlign.center, style: jakarta(12, 700, em: .06, color: BelotColors.textMuted)),
-            const SizedBox(height: 4),
+            Text(eyebrow.toUpperCase(), textAlign: TextAlign.center, style: jakarta(12, 700, em: .06, color: BelotColors.textMuted)),
+            const SizedBox(height: 2),
             Text(title, textAlign: TextAlign.center, style: jakarta(24, 700, lineHeight: 28)),
-            const SizedBox(height: 16),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              dot(BelotColors.teamA), const SizedBox(width: 8),
-              Text('Mi', style: jakarta(15, 600)), const SizedBox(width: 8),
-              Text('${g.scoreA}', style: jakarta(24, 800, tabular: true)),
-              const SizedBox(width: 16),
-              Text(':', style: jakarta(15, 400, color: BelotColors.textMuted)),
-              const SizedBox(width: 16),
-              Text('${g.scoreB}', style: jakarta(24, 800, tabular: true)), const SizedBox(width: 8),
-              Text('Vi', style: jakarta(15, 600)), const SizedBox(width: 8),
-              dot(BelotColors.teamB),
+            const SizedBox(height: 10),
+            Table(
+              columnWidths: const {0: FlexColumnWidth(), 1: FixedColumnWidth(56), 2: FixedColumnWidth(56)},
+              children: [
+                TableRow(children: [
+                  const SizedBox(),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [dot(BelotColors.teamA), const SizedBox(width: 6), Text('Mi', style: cell(700))]),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [dot(BelotColors.teamB), const SizedBox(width: 6), Text('Vi', style: cell(700))]),
+                ]),
+                row('Karte', r.cards[Team.a]!, r.cards[Team.b]!),
+                row('Zvanja', r.declarations[Team.a]!, r.declarations[Team.b]!),
+                row('Bela i štiglja', r.bela[Team.a]! + r.stiglja[Team.a]!, r.bela[Team.b]! + r.stiglja[Team.b]!),
+                row(r.fell ? 'Runda (pad)' : 'Runda', r.total[Team.a]!, r.total[Team.b]!, strong: true),
+              ],
+            ),
+            Container(height: 1, margin: const EdgeInsets.symmetric(vertical: 8), color: BelotColors.hairline),
+            Row(children: [
+              Expanded(child: Text('Ukupno', style: jakarta(15, 700))),
+              SizedBox(width: 56, child: Text('${g.scoreA}', textAlign: TextAlign.right, style: jakarta(18, 800, tabular: true))),
+              SizedBox(width: 56, child: Text('${g.scoreB}', textAlign: TextAlign.right, style: jakarta(18, 800, tabular: true))),
             ]),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             Row(children: [
               SecondaryButton('Početna', padding: 20, onTap: g.goHome),
               const SizedBox(width: 8),
-              Expanded(child: PrimaryButton('Nova runda', padding: 20, onTap: () => g.startRound(g.round + 1))),
+              Expanded(child: PrimaryButton(g.matchOver ? 'Nova igra' : 'Sljedeća runda', padding: 16, onTap: g.nextHand)),
             ]),
           ]),
         ),

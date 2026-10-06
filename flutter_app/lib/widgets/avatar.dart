@@ -70,12 +70,15 @@ class Avatar extends StatelessWidget {
 /// In-game 40 px avatar inside a 52 px box: optional pulsing ring (on turn)
 /// and a thin circular countdown ([timerLeft] 1 → 0).
 class SeatAvatar extends StatelessWidget {
-  const SeatAvatar({super.key, required this.who, required this.ring, this.turn = false, this.timerLeft, this.timerColor});
+  const SeatAvatar({super.key, required this.who, required this.ring, this.turn = false, this.timerLeft, this.timerColor, this.reaction});
   final Seat who;
   final Color ring;
   final bool turn;
   final double? timerLeft;
   final Color? timerColor;
+
+  /// Emoji bubble shown at the avatar's top-right corner.
+  final String? reaction;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -85,6 +88,23 @@ class SeatAvatar extends StatelessWidget {
           if (turn) PulseRing(size: 40, color: ring, period: const Duration(milliseconds: 1400)),
           if (timerLeft != null) CustomPaint(size: const Size.square(52), painter: _TimerPainter(timerLeft!, timerColor!)),
           Avatar(who: who, size: 40, ring: ring),
+          if (reaction != null)
+            Positioned(
+              right: -10,
+              top: -10,
+              child: FadeIn(
+                key: ValueKey(reaction),
+                scale: true,
+                duration: const Duration(milliseconds: 200),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(color: BelotColors.text, shape: BoxShape.circle, boxShadow: BelotShadows.cardBack),
+                  child: Text(reaction!, style: const TextStyle(fontSize: 18, height: 1)),
+                ),
+              ),
+            ),
         ]),
       );
 }
