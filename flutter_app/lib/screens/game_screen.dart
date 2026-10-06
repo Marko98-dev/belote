@@ -90,8 +90,8 @@ class _GameScreenState extends State<GameScreen> {
                 ]),
         ),
 
-        // ── Offered trump card (dimmed in round 2, when it can no longer be called) ──
-        if (isBid)
+        // ── Offered trump card (dimmed in round 2, when it can no longer be called; hidden behind my suit panel) ──
+        if (isBid && !(g.myBid && g.bidRound == 2))
           Positioned(
             left: w / 2 - 30, top: cyBid - 42,
             child: FadeIn(
@@ -269,13 +269,14 @@ class _ScoreBar extends StatelessWidget {
         child: Row(children: children),
       );
 
-  /// Each score has a fixed 4-digit width (up to 1001+) so the pill never grows into the partner's seat.
+  /// Each score has a fixed 3-digit width so the pill never grows into the partner's seat.
+  /// A 4-digit score only appears when the match ends, under the summary overlay.
   static Widget _score(Color dot, String label, int value) => Row(children: [
         Container(width: 8, height: 8, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
         const SizedBox(width: 6),
         Text(label, style: jakarta(15, 600)),
         const SizedBox(width: 6),
-        SizedBox(width: 38, child: Text('$value', style: jakarta(15, 800, tabular: true))),
+        SizedBox(width: value >= 1000 ? 38 : 28, child: Text('$value', style: jakarta(15, 800, tabular: true))),
       ]);
 }
 

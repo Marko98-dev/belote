@@ -1,0 +1,47 @@
+name: Flutter
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: flutter_app
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.6
+          cache: true
+      - run: flutter pub get
+      - run: dart analyze
+      - run: flutter test
+
+  android-apk:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.6
+          cache: true
+      - run: flutter pub get
+      # Signed with the debug key: fine for installing on your own phone, not for Google Play.
+      - run: flutter build apk --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: belot-android-apk
+          path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
